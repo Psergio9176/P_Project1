@@ -1,4 +1,4 @@
 nodeVersion: '20'
 rootDirectory: ponto-backend
-buildCommand: 'npm install --verbose --no-audit --no-fund 2>&1 | head -100'
+buildCommand: 'npm install --verbose'
 startCommand: 'node scripts/start.js'
