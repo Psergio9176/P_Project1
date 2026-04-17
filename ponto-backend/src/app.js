@@ -1,4 +1,9 @@
-require('dotenv').config();
+if (!process.env.PORT) {
+  process.env.PORT = '3001';
+}
+if (!process.env.FRONTEND_URL) {
+  process.env.FRONTEND_URL = 'http://localhost:5173';
+}
 
 const express = require('express');
 const cors = require('cors');
