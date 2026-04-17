@@ -1,7 +1,4 @@
 nodeVersion: '20'
 rootDirectory: ponto-backend
-buildCommand: 'npm install --verbose && npx prisma generate'
+buildCommand: 'npm install --force'
 startCommand: 'node src/app.js'
-env:
-  - key: 'npm_config_loglevel'
-    value: 'verbose'
