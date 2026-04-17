@@ -1,0 +1,135 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Empresa {
+  id        String   @id @default(uuid())
+  nome      String
+  unidades  Unidade[]
+  createdAt DateTime @default(now())
+}
+
+model Unidade {
+  id        String   @id @default(uuid())
+  nome      String
+  endereco  String?
+  latitude  Float?
+  longitude Float?
+  empresaId String
+  empresa   Empresa  @relation(fields: [empresaId], references: [id])
+  usuarios  Usuario[]
+  createdAt DateTime @default(now())
+}
+
+model Usuario {
+  id            String       @id @default(uuid())
+  cpf           String       @unique
+  nome          String
+  email         String?
+  senhaHash     String
+  perfil        Perfil       @default(COLABORADOR)
+  tipoJornada   TipoJornada  @default(PADRAO)
+  unidadeId     String
+  unidade       Unidade      @relation(fields: [unidadeId], references: [id])
+  ativo         Boolean      @default(true)
+  marcacoes     Marcacao[]
+  ajustes       AjusteMarcacao[]
+  assinaturas   AssinaturaPonto[]
+  subscriptions PushSubscription[]
+  auditLogs     AuditLog[]
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+}
+
+enum Perfil {
+  ADMIN
+  COLABORADOR
+}
+
+enum TipoJornada {
+  PADRAO
+  REDUZIDA
+}
+
+enum TipoMarcacao {
+  ENTRADA
+  SAIDA_ALMOCO
+  RETORNO_ALMOCO
+  SAIDA
+}
+
+model Marcacao {
+  id            String        @id @default(uuid())
+  usuarioId     String
+  usuario       Usuario       @relation(fields: [usuarioId], references: [id])
+  tipo          TipoMarcacao
+  dataHoraUtc   DateTime
+  dataHoraLocal DateTime
+  latitude      Float
+  longitude     Float
+  acuraciaGps   Float?
+  userAgent     String?
+  offline       Boolean       @default(false)
+  sincronizado  Boolean       @default(true)
+  createdAt     DateTime      @default(now())
+
+  @@index([usuarioId, dataHoraUtc])
+}
+
+model AjusteMarcacao {
+  id               String        @id @default(uuid())
+  usuarioId        String
+  usuario          Usuario       @relation(fields: [usuarioId], references: [id])
+  tipo             TipoMarcacao
+  dataHoraOriginal DateTime?
+  dataHoraAjuste   DateTime
+  justificativa    String
+  aprovado         Boolean?
+  createdAt        DateTime      @default(now())
+
+  @@index([usuarioId])
+}
+
+model AssinaturaPonto {
+  id            String   @id @default(uuid())
+  usuarioId     String
+  usuario       Usuario  @relation(fields: [usuarioId], references: [id])
+  mesReferencia String
+  hashEspelho   String
+  assinadoEm    DateTime
+  createdAt     DateTime @default(now())
+
+  @@unique([usuarioId, mesReferencia])
+}
+
+model PushSubscription {
+  id        String   @id @default(uuid())
+  usuarioId String
+  usuario   Usuario  @relation(fields: [usuarioId], references: [id])
+  endpoint  String
+  keys      Json
+  createdAt DateTime @default(now())
+
+  @@unique([usuarioId, endpoint])
+}
+
+model AuditLog {
+  id         String   @id @default(uuid())
+  usuarioId  String
+  usuario    Usuario  @relation(fields: [usuarioId], references: [id])
+  acao       String
+  entidade   String
+  entidadeId String
+  dados      Json?
+  ip         String?
+  userAgent  String?
+  createdAt  DateTime @default(now())
+
+  @@index([usuarioId])
+  @@index([acao])
+}
