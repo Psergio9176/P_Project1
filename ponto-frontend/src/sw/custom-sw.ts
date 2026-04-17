@@ -10,26 +10,22 @@ self.addEventListener('install', () => {
   self.skipWaiting();
 });
 
-self.addEventListener('activate', (event) => {
+self.addEventListener('activate', (event: ExtendableEvent) => {
   event.waitUntil(self.clients.claim());
 });
 
-self.addEventListener('push', (event) => {
+self.addEventListener('push', (event: PushEvent) => {
   if (!event.data) return;
 
   const data = event.data.json();
   
-  const options: NotificationOptions = {
+  const options: NotificationOptions & { actions?: { action: string; title: string }[] } = {
     body: data.body,
     icon: '/pwa-192x192.svg',
     badge: '/pwa-192x192.svg',
     tag: data.tag || 'lembrete-ponto',
     requireInteraction: true,
     data: data.data || {},
-    actions: [
-      { action: 'registrar', title: 'Bater Ponto' },
-      { action: 'dismiss', title: 'Ignorar' }
-    ]
   };
 
   event.waitUntil(
@@ -37,12 +33,12 @@ self.addEventListener('push', (event) => {
   );
 });
 
-self.addEventListener('notificationclick', (event) => {
+self.addEventListener('notificationclick', (event: NotificationEvent) => {
   event.notification.close();
 
   if (event.action === 'registrar') {
     event.waitUntil(
-      self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+      self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList: any[]) => {
         for (const client of clientList) {
           if (client.url.includes('localhost') || client.url === '/') {
             client.focus();
@@ -56,7 +52,7 @@ self.addEventListener('notificationclick', (event) => {
   }
 });
 
-self.addEventListener('sync', (event) => {
+self.addEventListener('sync', (event: SyncEvent) => {
   if (event.tag === 'sync-marcacoes') {
     event.waitUntil(sincronizarMarcacoes());
   }
@@ -67,7 +63,7 @@ async function sincronizarMarcacoes(): Promise<void> {
     const db = await openDatabase();
     const tx = db.transaction('marcacoes-pendentes', 'readonly');
     const store = tx.objectStore('marcacoes-pendentes');
-    const pendentes = await store.getAll();
+    const pendentes = await getAllFromStore(store);
     
     if (pendentes.length === 0) return;
 
@@ -94,6 +90,14 @@ async function sincronizarMarcacoes(): Promise<void> {
   } catch (error) {
     console.error('Sync failed:', error);
   }
+}
+
+function getAllFromStore(store: any): Promise<any[]> {
+  return new Promise((resolve, reject) => {
+    const request = store.getAll();
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
 }
 
 function openDatabase(): Promise<IDBDatabase> {

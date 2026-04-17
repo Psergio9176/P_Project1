@@ -31,7 +31,7 @@ export const OfflineService = {
 
   async obterPendentes(): Promise<MarcacaoOffline[]> {
     const db = await getDB();
-    return db.getAllFromIndex('marcacoes-pendentes', 'by-sync', false);
+    return db.getAllFromIndex('marcacoes-pendentes', 'by-sync', 'false');
   },
 
   async limparSincronizadas(ids: string[]): Promise<void> {
