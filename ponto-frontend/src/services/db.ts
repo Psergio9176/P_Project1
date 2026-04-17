@@ -16,7 +16,7 @@ interface PontoOfflineDB extends DBSchema {
       sincronizado: boolean;
       createdAt: string;
     };
-    indexes: { 'by-sync': boolean };
+    indexes: { 'by-sync': string };
   };
   'marcacoes-cache': {
     key: string;

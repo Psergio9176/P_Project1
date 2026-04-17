@@ -33,7 +33,7 @@ export const NotificationService = {
       
       const subscription = await registration.pushManager.subscribe({
         userVisibleOnly: true,
-        applicationServerKey: this.urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
+        applicationServerKey: this.urlBase64ToUint8Array(VAPID_PUBLIC_KEY) as unknown as BufferSource,
       });
 
       const pushData: PushSubscriptionData = subscription.toJSON() as PushSubscriptionData;
