@@ -1,3 +1,4 @@
 nodeVersion: '20'
-buildCommand: 'cd ponto-backend && npm install && npx prisma generate'
-startCommand: 'cd ponto-backend && node src/app.js'
+rootDirectory: ponto-backend
+buildCommand: 'npm install && npx prisma generate'
+startCommand: 'node src/app.js'
