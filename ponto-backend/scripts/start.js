@@ -14,7 +14,7 @@ const appPath = path.join(__dirname, '..', 'src', 'app.js');
 console.log('app.js exists:', fs.existsSync(appPath));
 
 try {
-  require('./app.js');
+  require('../src/app.js');
 } catch (e) {
   console.error('Error:', e.message);
   process.exit(1);
