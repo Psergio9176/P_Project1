@@ -24,7 +24,7 @@ const FERIADOS_NACIONAIS_2026 = [
 export const gerarEspelhoPDF = async (
   usuarioId: string,
   mes: string
-): Promise<{ pdf: PDFKit.PDFDocument; hash: string }> => {
+): Promise<{ pdf: any; hash: string }> => {
   const [year, month] = mes.split('-').map(Number);
   
   const usuario = await prisma.usuario.findUnique({
@@ -47,7 +47,7 @@ export const gerarEspelhoPDF = async (
     orderBy: { dataHoraLocal: 'asc' }
   });
 
-  const marcacoesPorData = marcacoes.reduce((acc, m) => {
+  const marcacoesPorData = marcacoes.reduce<Record<string, MarcacaoData[]>>((acc, m) => {
     const data = format(m.dataHoraLocal, 'yyyy-MM-dd');
     if (!acc[data]) acc[data] = [];
     acc[data].push(m);
@@ -94,7 +94,7 @@ export const gerarEspelhoPDF = async (
   doc.font('Helvetica').fontSize(8);
   let yPos = tableTop + 20;
 
-  const diasuteis = eachDayOfInterval({ start: inicio, end: fim }).filter(d => {
+  const diasuteis = eachDayOfInterval({ start: inicio, end: fim }).filter((d: Date) => {
     if (isWeekend(d)) return false;
     const dataStr = format(d, 'yyyy-MM-dd');
     return !FERIADOS_NACIONAIS_2026.includes(dataStr);
@@ -163,10 +163,10 @@ export const gerarEspelhoPDF = async (
     doc.fontSize(8).text('Pendente de assinatura', 50, yPos + 30);
   }
 
-  const pdfBuffer = await new Promise<Buffer>((resolve) => {
-    const chunks: Buffer[] = [];
-    doc.on('data', (chunk: Buffer) => chunks.push(chunk));
-    doc.on('end', () => resolve(Buffer.concat(chunks)));
+  const pdfBuffer = await new Promise<globalThis.Buffer>((resolve) => {
+    const chunks: globalThis.Buffer[] = [];
+    doc.on('data', (chunk: globalThis.Buffer) => chunks.push(chunk));
+    doc.on('end', () => resolve(globalThis.Buffer.concat(chunks)));
   });
 
   const hash = crypto.createHash('sha256').update(pdfBuffer).digest('hex');
