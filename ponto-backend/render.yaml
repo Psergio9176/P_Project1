@@ -1,4 +1,4 @@
 nodeVersion: '20'
 rootDirectory: ponto-backend
-buildCommand: 'npm ci --legacy-peer-deps'
+buildCommand: 'npm ci --legacy-peer-deps && ls node_modules'
 startCommand: 'node src/app.js'
