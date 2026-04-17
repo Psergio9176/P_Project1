@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon --exec ts-node src/app.ts",
     "build": "echo 'Compilacao ignorada'",
-    "start": "npx tsx src/app.ts"
+    "start": "node src/app.js"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
