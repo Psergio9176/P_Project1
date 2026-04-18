@@ -5,9 +5,10 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon --exec ts-node src/app.ts",
-    "build": "npm install",
+    "build": "npm install && npm run seed",
     "start": "node scripts/start.js",
-    "seed": "node prisma/seed.js"
+    "seed": "node prisma/seed.js",
+    "db:setup": "npm run seed"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
