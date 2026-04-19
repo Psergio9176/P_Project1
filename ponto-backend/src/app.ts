@@ -28,21 +28,20 @@ const allowedOrigins = [
   'https://p-project1-git-main-psergio9176s-projects.vercel.app',
   'https://p-project1-74ruxcwlx-psergio9176s-projects.vercel.app'
 ];
-const corsOptions = {
-  origin: (origin: string | undefined, callback: (err: Error | null, allowed?: boolean) => void) => {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true
-};
 if (process.env.FRONTEND_URL) {
   const urls = process.env.FRONTEND_URL.split(',');
   urls.forEach(url => allowedOrigins.push(url.trim()));
 }
-app.use(cors(corsOptions));
+app.use(cors({
+  origin: (origin: string | undefined, callback: (err: Error | null, allowed?: boolean) => void) => {
+    if (!origin || allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'), false);
+    }
+  },
+  credentials: true
+}));
 app.use(express.json());
 
 const loginLimiter = rateLimit({
