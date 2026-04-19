@@ -17,12 +17,12 @@ if (fs.existsSync(nodeModulesPath)) {
 const expressPath = path.join(nodeModulesPath, 'express');
 console.log('express exists:', fs.existsSync(expressPath));
 
-const appPath = path.join(__dirname, '..', 'src', 'app.js');
+const appPath = path.join(__dirname, '..', 'dist', 'app.js');
 console.log('\napp.js exists:', fs.existsSync(appPath));
 
 console.log('\n=== Trying to require app ===');
 try {
-  require('../src/app.js');
+  require('../dist/app.js');
   console.log('App loaded successfully');
 } catch (e) {
   console.error('Error:', e.message);

@@ -1,7 +1,7 @@
 nodeVersion: '20'
 rootDirectory: ponto-backend
 buildCommand: npm install && npx tsc
-startCommand: node scripts/start.js
+startCommand: node dist/app.js
 env:
   - key: 'DATABASE_URL'
     fromDatabase:
