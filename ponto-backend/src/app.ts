@@ -33,8 +33,8 @@ if (process.env.FRONTEND_URL) {
   urls.forEach(url => allowedOrigins.push(url.trim()));
 }
 app.use(cors({
-  origin: (origin: string | undefined, callback: (err: Error | null, allowed?: boolean) => void) => {
-    if (!origin || allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
+  origin: (origin: string | undefined, callback: (err: Error | null, allowed?: boolean) => {
+    if (!origin || allowedOrigins.includes(origin) || origin.includes('.vercel.app') || origin.includes('vercel.app')) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'), false);
