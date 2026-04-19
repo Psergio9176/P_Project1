@@ -24,10 +24,12 @@ const allowedOrigins = [
   'http://localhost:5174',
   'http://localhost:5175',
   'http://localhost:5176',
-  'https://p-project1.vercel.app'
+  'https://p-project1.vercel.app',
+  'https://p-project1-git-main-psergio9176s-projects.vercel.app'
 ];
 if (process.env.FRONTEND_URL) {
-  allowedOrigins.push(process.env.FRONTEND_URL);
+  const urls = process.env.FRONTEND_URL.split(',');
+  urls.forEach(url => allowedOrigins.push(url.trim()));
 }
 app.use(cors({
   origin: allowedOrigins,

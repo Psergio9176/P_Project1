@@ -9,6 +9,9 @@ const ORDEM_MARCACOES_PADRAO = ['ENTRADA', 'SAIDA_ALMOCO', 'RETORNO_ALMOCO', 'SA
 const ORDEM_MARCACOES_REDUZIDA = ['ENTRADA', 'SAIDA'];
 const getProximaMarcacao = (marcacoes, tipoJornada) => {
     const ordem = tipoJornada === 'REDUZIDA' ? ORDEM_MARCACOES_REDUZIDA : ORDEM_MARCACOES_PADRAO;
+    if (marcacoes.length === 0) {
+        return ordem[0];
+    }
     const ultimoTipo = marcacoes[marcacoes.length - 1];
     const ultimoIndex = ordem.indexOf(ultimoTipo);
     if (ultimoIndex === -1 || ultimoIndex === ordem.length - 1) {

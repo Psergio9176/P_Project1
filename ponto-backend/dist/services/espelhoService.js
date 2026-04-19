@@ -68,7 +68,7 @@ const gerarEspelhoPDF = async (usuarioId, mes) => {
     doc.moveTo(50, tableTop + 15).lineTo(doc.page.width - 50, tableTop + 15).stroke();
     doc.font('Helvetica').fontSize(8);
     let yPos = tableTop + 20;
-    const diasuteis = (0, date_fns_1.eachDayOfInterval)({ start: inicio, end: fim }).filter(d => {
+    const diasuteis = (0, date_fns_1.eachDayOfInterval)({ start: inicio, end: fim }).filter((d) => {
         if ((0, date_fns_1.isWeekend)(d))
             return false;
         const dataStr = (0, date_fns_1.format)(d, 'yyyy-MM-dd');
@@ -129,7 +129,7 @@ const gerarEspelhoPDF = async (usuarioId, mes) => {
     const pdfBuffer = await new Promise((resolve) => {
         const chunks = [];
         doc.on('data', (chunk) => chunks.push(chunk));
-        doc.on('end', () => resolve(Buffer.concat(chunks)));
+        doc.on('end', () => resolve(globalThis.Buffer.concat(chunks)));
     });
     const hash = crypto_1.default.createHash('sha256').update(pdfBuffer).digest('hex');
     return { pdf: doc, hash };
