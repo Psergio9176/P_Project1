@@ -9,3 +9,5 @@ env:
       property: connectionString
   - key: 'JWT_SECRET'
     value: '81070e429c07d9ddd754d8dc0a874398c7610c975330b9e581629a561b9da5c1'
+  - key: 'FRONTEND_URL'
+    value: 'https://p-project1.vercel.app'
