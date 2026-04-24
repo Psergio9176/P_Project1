@@ -1,16 +1,42 @@
 import React, { useState } from 'react';
 import { Layout } from '../components/Layout';
 import { ProtectedRoute } from '../components/ProtectedRoute';
+import { api } from '../services/api';
 import dayjs from 'dayjs';
 
 export const ExportPage: React.FC = () => {
   const [dataInicio, setDataInicio] = useState(dayjs().startOf('month').format('YYYY-MM-DD'));
   const [dataFim, setDataFim] = useState(dayjs().format('YYYY-MM-DD'));
   const [formato, setFormato] = useState<'xlsx' | 'csv'>('xlsx');
+  const [loading, setLoading] = useState(false);
 
-  const handleExport = () => {
-    const url = `http://localhost:3001/api/export/marcacoes?formato=${formato}&dataInicio=${dataInicio}&dataFim=${dataFim}`;
-    window.open(url, '_blank');
+  const handleExport = async () => {
+    setLoading(true);
+    try {
+      const response = await api.get(
+        `/export/marcacoes?formato=${formato}&dataInicio=${dataInicio}&dataFim=${dataFim}`,
+        { responseType: 'blob' }
+      );
+
+      const blob = new Blob([response.data], {
+        type: formato === 'xlsx' 
+          ? 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+          : 'text/csv'
+      });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `marcacoes_${dataInicio}_${dataFim}.${formato}`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error('Erro ao exportar:', error);
+      alert('Falha ao exportar relatório');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -56,9 +82,10 @@ export const ExportPage: React.FC = () => {
 
               <button
                 onClick={handleExport}
-                className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700"
+                disabled={loading}
+                className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 disabled:bg-gray-400"
               >
-                Exportar
+                {loading ? 'Exportando...' : 'Exportar'}
               </button>
             </div>
           </div>
