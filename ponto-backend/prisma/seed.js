@@ -68,6 +68,40 @@ async function seed() {
 
   console.log(`Colaborador criado: ${colab.nome} - CPF: ${colab.cpf} - Senha: colab123`);
 
+  const senhaMaria = await bcrypt.hash('maria123', 10);
+  const maria = await prisma.usuario.upsert({
+    where: { cpf: '22222222222' },
+    update: {},
+    create: {
+      cpf: '22222222222',
+      nome: 'Maria Silva',
+      email: 'maria@empresa.com',
+      senhaHash: senhaMaria,
+      perfil: 'COLABORADOR',
+      tipoJornada: 'PADRAO',
+      unidadeId: unidade.id,
+      ativo: true
+    }
+  });
+  console.log(`Colaborador criado: ${maria.nome} - CPF: ${maria.cpf} - Senha: maria123`);
+
+  const senhaCarlos = await bcrypt.hash('carlos123', 10);
+  const carlos = await prisma.usuario.upsert({
+    where: { cpf: '33333333333' },
+    update: {},
+    create: {
+      cpf: '33333333333',
+      nome: 'Carlos Santos',
+      email: 'carlos@empresa.com',
+      senhaHash: senhaCarlos,
+      perfil: 'COLABORADOR',
+      tipoJornada: 'PADRAO',
+      unidadeId: unidade.id,
+      ativo: true
+    }
+  });
+  console.log(`Colaborador criado: ${carlos.nome} - CPF: ${carlos.cpf} - Senha: carlos123`);
+
   console.log('\n✅ Seed concluído com sucesso!');
 }
 
