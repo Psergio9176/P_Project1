@@ -163,13 +163,9 @@ export const gerarEspelhoPDF = async (
     doc.fontSize(8).text('Pendente de assinatura', 50, yPos + 30);
   }
 
-  const pdfBuffer = await new Promise<globalThis.Buffer>((resolve) => {
-    const chunks: globalThis.Buffer[] = [];
-    doc.on('data', (chunk: globalThis.Buffer) => chunks.push(chunk));
-    doc.on('end', () => resolve(globalThis.Buffer.concat(chunks)));
-  });
-
-  const hash = crypto.createHash('sha256').update(pdfBuffer).digest('hex');
+  const hash = crypto.createHash('sha256')
+      .update(JSON.stringify({ usuarioId, mes, marcacoes: marcacoes.length }))
+      .digest('hex');
 
   return { pdf: doc, hash };
 };

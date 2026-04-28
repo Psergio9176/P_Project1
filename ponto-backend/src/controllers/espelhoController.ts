@@ -20,11 +20,17 @@ export const gerarEspelho = async (req: Request, res: Response): Promise<void> =
 
     const { pdf, hash } = await gerarEspelhoPDF(usuarioId, mes);
 
+    const pdfBuffer = await new Promise<Buffer>((resolve, reject) => {
+      const chunks: Buffer[] = [];
+      pdf.on('data', (chunk: Buffer) => chunks.push(chunk));
+      pdf.on('end', () => resolve(Buffer.concat(chunks)));
+      pdf.on('error', reject);
+      pdf.end();
+    });
+
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Disposition', `attachment; filename="espelho-${mes}-${usuario.cpf}.pdf"`);
-    
-    pdf.pipe(res);
-    pdf.end();
+    res.send(pdfBuffer);
   } catch (error) {
     console.error('Gerar espelho error:', error);
     res.status(500).json({ error: 'Erro ao gerar espelho de ponto' });
@@ -55,8 +61,7 @@ export const assinarEspelho = async (req: AuthenticatedRequest, res: Response): 
       return;
     }
 
-    const { pdf, hash } = await gerarEspelhoPDF(usuarioId, mes);
-    pdf.end();
+    const { hash } = await gerarEspelhoPDF(usuarioId, mes);
 
     const assinatura = await prisma.assinaturaPonto.create({
       data: {
