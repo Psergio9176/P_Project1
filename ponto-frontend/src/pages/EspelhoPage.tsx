@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Layout } from '../components/Layout';
 import { useAuth } from '../contexts/AuthContext';
-import { espelhoService } from '../services/api';
+import { espelhoService, api } from '../services/api';
 import dayjs from 'dayjs';
 
 interface Assinatura {
@@ -34,32 +34,31 @@ export const EspelhoPage: React.FC = () => {
     }
   }, [mes, usuario?.id]);
 
-  const handleVisualizar = () => {
+  const handleVisualizar = async () => {
     if (!usuario?.id) return;
     
     setIsLoading(true);
-    const token = localStorage.getItem('accessToken');
-    const url = `${import.meta.env.VITE_API_URL || 'http://localhost:3001/api'}/espelho/${usuario.id}/${mes}`;
-    
-    fetch(url, {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-      .then(response => response.blob())
-      .then(blob => {
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `espelho-${mes}.pdf`;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        window.URL.revokeObjectURL(url);
-      })
-      .catch(error => {
-        console.error('Erro ao baixar espelho:', error);
-        alert('Erro ao gerar espelho. Tente novamente.');
-      })
-      .finally(() => setIsLoading(false));
+    try {
+      const response = await api.get(
+        `/espelho/${usuario.id}/${mes}`,
+        { responseType: 'blob' }
+      );
+
+      const blob = new Blob([response.data], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `espelho-${mes}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Erro ao baixar espelho:', error);
+      alert('Erro ao gerar espelho. Tente novamente.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleAssinar = async () => {
@@ -67,27 +66,14 @@ export const EspelhoPage: React.FC = () => {
     
     setIsLoadingAssinatura(true);
     try {
-      const token = localStorage.getItem('accessToken');
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL || 'http://localhost:3001/api'}/espelho/${usuario.id}/${mes}/assinar`,
-        {
-          method: 'POST',
-          headers: { Authorization: `Bearer ${token}` }
-        }
-      );
+      const response = await api.post(`/espelho/${usuario.id}/${mes}/assinar`);
       
-      if (response.ok) {
-        const data = await response.json();
-        setAssinatura(data.assinatura);
-        setShowConfirm(false);
-        alert('Espelho assinado com sucesso!');
-      } else {
-        const error = await response.json();
-        alert(error.error || 'Erro ao assinar espelho');
-      }
-    } catch (error) {
+      setAssinatura(response.data.assinatura);
+      setShowConfirm(false);
+      alert('Espelho assinado com sucesso!');
+    } catch (error: any) {
       console.error('Erro ao assinar:', error);
-      alert('Erro ao assinar espelho. Tente novamente.');
+      alert(error.response?.data?.error || 'Erro ao assinar espelho. Tente novamente.');
     } finally {
       setIsLoadingAssinatura(false);
     }
