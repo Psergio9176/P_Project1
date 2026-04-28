@@ -157,6 +157,23 @@ cd ponto-frontend
 npm test
 ```
 
+## Melhorias e Manutenções
+
+| # | Ponto | Status |
+|---|-------|--------|
+| 1 | Exportação de relatorios | ✅ Corrigido |
+| 2 | Menu navegacao | ✅ Corrigido |
+| 3 | PWA Install Banner | ✅ Implementado |
+| 4 | Criar Colaborador | ✅ Implementado |
+| 5 | Gerar PDF Espelho | ✅ Corrigido |
+| 6 | Assinatura de ponto | ⚠️ Pendente |
+| 7 | Recuperação de senha | ⚠️ Pendente |
+| 8 | Docker/Migração | ⚠️ Pendente |
+
+---
+
+*Última atualização: Abril 2026*
+
 ## Licença
 
 MIT
