@@ -80,7 +80,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
       </main>
 
       <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 overflow-x-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-        <div className="max-w-lg mx-auto flex justify-start items-center gap-2 px-2 py-1">
+        <div className="max-w-lg mx-auto flex justify-center items-center gap-2 px-2 py-1">
           {navItems.map((item) => (
             <Link
               key={item.path}
