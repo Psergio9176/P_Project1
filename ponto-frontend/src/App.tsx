@@ -8,10 +8,13 @@ import { EspelhoPage } from './pages/EspelhoPage';
 import { ColaboradoresPage } from './pages/ColaboradoresPage';
 import { AjustesAdminPage } from './pages/AjustesAdminPage';
 import { ExportPage } from './pages/ExportPage';
+import { PwaInstallBanner } from './components/PwaInstallBanner';
 
 function App() {
   return (
-    <Routes>
+    <>
+      <PwaInstallBanner />
+      <Routes>
       <Route path="/login" element={<LoginPage />} />
       
       <Route
@@ -77,6 +80,7 @@ function App() {
         }
       />
     </Routes>
+    </>
   );
 }
 

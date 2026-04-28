@@ -3,7 +3,6 @@ import { useAuth } from '../contexts/AuthContext';
 import { Link, useLocation } from 'react-router-dom';
 import { useOnlineStatus } from '../hooks/useOnlineStatus';
 import { usePushNotifications } from '../hooks/usePushNotifications';
-import { usePwaInstall } from '../hooks/usePwaInstall';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -14,7 +13,6 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
   const location = useLocation();
   const isOnline = useOnlineStatus();
   const { permission, isSubscribed, subscribe } = usePushNotifications();
-  const { isInstallable, install } = usePwaInstall();
   const [showNotifPrompt, setShowNotifPrompt] = useState(false);
 
   useEffect(() => {
@@ -119,15 +117,6 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
             </button>
           </div>
         </div>
-      )}
-      {isInstallable && (
-        <button
-          onClick={install}
-          className="fixed bottom-20 left-4 right-4 max-w-lg mx-auto bg-green-600 text-white py-3 rounded-lg shadow-lg font-medium flex items-center justify-center gap-2 z-50"
-        >
-          <span>📱</span>
-          <span>Instalar App</span>
-        </button>
       )}
     </div>
   );
