@@ -20,7 +20,7 @@ function App() {
       <Route
         path="/"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute perfis={['COLABORADOR']} redirectTo="/admin/colaboradores">
             <HomePage />
           </ProtectedRoute>
         }
@@ -29,7 +29,7 @@ function App() {
       <Route
         path="/historico"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute perfis={['COLABORADOR']} redirectTo="/admin/colaboradores">
             <HistoricoPage />
           </ProtectedRoute>
         }

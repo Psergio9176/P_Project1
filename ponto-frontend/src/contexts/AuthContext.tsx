@@ -6,7 +6,7 @@ interface AuthContextType {
   usuario: Usuario | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (cpf: string, senha: string) => Promise<void>;
+  login: (cpf: string, senha: string) => Promise<Usuario>;
   logout: () => void;
 }
 
@@ -31,11 +31,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   }, []);
 
-  const login = async (cpf: string, senha: string): Promise<void> => {
+  const login = async (cpf: string, senha: string): Promise<Usuario> => {
     const response: LoginResponse = await authService.login(cpf, senha);
     localStorage.setItem('accessToken', response.accessToken);
     localStorage.setItem('refreshToken', response.refreshToken);
     setUsuario(response.usuario);
+    return response.usuario;
   };
 
   const logout = (): void => {

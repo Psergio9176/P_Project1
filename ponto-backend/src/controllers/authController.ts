@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import bcrypt from 'bcryptjs';
+import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import prisma from '../config/database';
 import { AuthenticatedRequest } from '../middlewares/auth';
@@ -17,8 +17,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     }
 
     const usuario = await prisma.usuario.findUnique({
-      where: { cpf },
-      include: { unidade: { include: { empresa: true } } }
+      where: { cpf }
     });
 
     if (!usuario) {

@@ -2,8 +2,6 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
-
 const { errorHandler } = require('./middlewares/errorHandler');
 
 const authRoutes = require('./routes/auth');
@@ -45,19 +43,11 @@ app.use(cors({
 }));
 app.use(express.json());
 
-const loginLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 20,
-  message: { error: 'Muitas tentativas de login. Tente novamente em 15 minutos.' },
-  standardHeaders: true,
-  legacyHeaders: false
-});
-
 app.get('/', (_req, res) => {
   res.json({ message: 'Ponto Backend API', status: 'running', version: '1.0.0' });
 });
 
-app.use('/api/auth', loginLimiter, authRoutes);
+app.use('/api/auth', authRoutes);
 app.use('/api/usuarios', usuariosRoutes);
 app.use('/api/marcacoes', marcacoesRoutes);
 app.use('/api/ajustes', ajustesRoutes);

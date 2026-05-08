@@ -6,9 +6,10 @@ import { Perfil } from '../types';
 interface ProtectedRouteProps {
   children: ReactNode;
   perfis?: Perfil[];
+  redirectTo?: string;
 }
 
-export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, perfis }) => {
+export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, perfis, redirectTo = '/' }) => {
   const { isAuthenticated, isLoading, usuario } = useAuth();
 
   if (isLoading) {
@@ -24,7 +25,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, perfis
   }
 
   if (perfis && usuario && !perfis.includes(usuario.perfil)) {
-    return <Navigate to="/" replace />;
+    return <Navigate to={redirectTo} replace />;
   }
 
   return <>{children}</>;

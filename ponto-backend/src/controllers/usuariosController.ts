@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import bcrypt from 'bcryptjs';
+import bcrypt from 'bcrypt';
 import prisma from '../config/database';
 
 export const listar = async (_req: Request, res: Response): Promise<void> => {

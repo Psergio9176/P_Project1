@@ -24,20 +24,18 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   const isAdmin = usuario?.perfil === 'ADMIN';
 
-  const navItems = [
-    { path: '/', label: 'Início', icon: '⏱' },
-    { path: '/historico', label: 'Histórico', icon: '📋' },
-    { path: '/ajuste', label: 'Ajuste', icon: '✏️' },
-    { path: '/espelho', label: 'Espelho', icon: '📄' },
-  ];
-
-  if (isAdmin) {
-    navItems.push(
-      { path: '/admin/colaboradores', label: 'Colaboradores', icon: '👥' },
-      { path: '/admin/ajustes', label: 'Ajustes', icon: '✅' },
-      { path: '/admin/export', label: 'Exportar', icon: '📥' }
-    );
-  }
+  const navItems = isAdmin
+    ? [
+        { path: '/admin/colaboradores', label: 'Colaboradores', icon: '👥' },
+        { path: '/admin/ajustes', label: 'Ajustes', icon: '✅' },
+        { path: '/admin/export', label: 'Exportar', icon: '📥' },
+      ]
+    : [
+        { path: '/', label: 'Início', icon: '⏱' },
+        { path: '/historico', label: 'Histórico', icon: '📋' },
+        { path: '/ajuste', label: 'Ajuste', icon: '✏️' },
+        { path: '/espelho', label: 'Espelho', icon: '📄' },
+      ];
 
   const handleEnableNotifications = async () => {
     const success = await subscribe();
